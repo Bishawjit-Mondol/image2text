@@ -54,41 +54,50 @@
 
 
 
+#
+# import cv2
+# import pytesseract
+# from PIL import Image
+# import numpy as np
+#
+# def basic_ocr(image_path, lang='eng'):
+#     try:
+#         # Try direct OCR first
+#         text = pytesseract.image_to_string(Image.open(image_path), lang=lang)
+#         if len(text.strip()) > 10:  # Arbitrary threshold
+#             return text
+#     except Exception as e:
+#         print("Basic OCR failed, fallback to OpenCV:", e)
+#
+#     # Fallback to OpenCV preprocessing if text is too short
+#     return advanced_ocr(image_path, lang)
+#
+# def advanced_ocr(image_path, lang='eng'):
+#     img = cv2.imread(image_path)
+#     h, w = img.shape[:2]
+#
+#     if h < 800 or w < 800:
+#         img = cv2.resize(img, (w*2, h*2), interpolation=cv2.INTER_LINEAR)
+#
+#     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+#     gray = cv2.medianBlur(gray, 3)
+#     thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+#
+#     config = '--psm 6 --oem 3'
+#     text = pytesseract.image_to_string(thresh, lang=lang, config=config)
+#     return text
+#
+# if __name__ == '__main__':
+#     image_path = 'test-4.jpg'  # or bangla-image.jpg
+#     lang = 'eng+ben'  # or 'ben' or 'eng+ben'
+#     result = basic_ocr(image_path, lang)
+#     print(result)
 
-import cv2
-import pytesseract
-from PIL import Image
-import numpy as np
 
-def basic_ocr(image_path, lang='eng'):
-    try:
-        # Try direct OCR first
-        text = pytesseract.image_to_string(Image.open(image_path), lang=lang)
-        if len(text.strip()) > 10:  # Arbitrary threshold
-            return text
-    except Exception as e:
-        print("Basic OCR failed, fallback to OpenCV:", e)
 
-    # Fallback to OpenCV preprocessing if text is too short
-    return advanced_ocr(image_path, lang)
+# BEST RESULT
+import easyocr
 
-def advanced_ocr(image_path, lang='eng'):
-    img = cv2.imread(image_path)
-    h, w = img.shape[:2]
-
-    if h < 800 or w < 800:
-        img = cv2.resize(img, (w*2, h*2), interpolation=cv2.INTER_LINEAR)
-
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    gray = cv2.medianBlur(gray, 3)
-    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-
-    config = '--psm 6 --oem 3'
-    text = pytesseract.image_to_string(thresh, lang=lang, config=config)
-    return text
-
-if __name__ == '__main__':
-    image_path = 'test-4.jpg'  # or bangla-image.jpg
-    lang = 'eng+ben'  # or 'ben' or 'eng+ben'
-    result = basic_ocr(image_path, lang)
-    print(result)
+reader = easyocr.Reader(['bn', 'en'])  # Bangla + English
+results = reader.readtext('test-4.jpg', detail=0)
+print('\n'.join(results))

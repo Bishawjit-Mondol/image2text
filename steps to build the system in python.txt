@@ -1,3 +1,5 @@
 1. Install(.exe) - Tesseract-OCR
 2. pip install pytesseract
 3. pip install pillow opencv-python
+4. pip install easyocr
+
